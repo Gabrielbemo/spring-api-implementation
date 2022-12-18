@@ -1,21 +1,11 @@
 package com.gabriel.api.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class Game {
+    private Long id;
     private String name;
-
-    public Game(String name){
-        this.name = name;
-    }
-
-    public Game(){
-
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

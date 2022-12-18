@@ -1,6 +1,7 @@
 package com.gabriel.api.controller;
 
 import com.gabriel.api.domain.Game;
+import com.gabriel.api.service.GameService;
 import com.gabriel.api.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,15 +13,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("game")
+@RequestMapping("games")
 @Log4j2
 @RequiredArgsConstructor
 public class GamesController {
     private final DateUtil dateUtil;
+    private final GameService gameService;
 
-    @GetMapping(path = "list")
+    @GetMapping
     public List<Game> list(){
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return List.of(new Game("tf2"), new Game("minecraft"));
+        return gameService.listAll();
     }
 }
