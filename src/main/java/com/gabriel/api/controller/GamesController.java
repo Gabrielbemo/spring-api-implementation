@@ -36,4 +36,11 @@ public class GamesController {
     public ResponseEntity<Game> save(@RequestBody Game game){
         return new ResponseEntity<>(gameService.save(game), HttpStatus.CREATED);
     }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id){
+        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+        gameService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
