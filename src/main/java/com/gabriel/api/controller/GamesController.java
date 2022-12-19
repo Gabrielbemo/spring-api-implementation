@@ -43,4 +43,10 @@ public class GamesController {
         gameService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping
+    public ResponseEntity<Void> replace(@RequestBody Game game){
+        gameService.replace(game);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
