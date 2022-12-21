@@ -1,45 +1,47 @@
 package com.gabriel.api.service;
 
 import com.gabriel.api.domain.Game;
+import com.gabriel.api.repository.GameRepository;
+import com.gabriel.api.requests.GamePostRequestBody;
+import com.gabriel.api.requests.GamePutRequestBody;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@RequiredArgsConstructor
 public class GameService {
-    private static List<Game> games;
 
-    static {
-        games = new ArrayList<>(List.of(new Game(1L, "tf2"), new Game(2L, "minecraft")));
+    private final GameRepository gameRepository;
+
+    public List<Game> listAll() {
+        return gameRepository.findAll();
     }
 
-    public List<Game> listAll(){
-        return games;
-    }
-
-    public Game findById(long id){
-        return games.stream()
-                .filter(game -> game.getId().equals(id))
-                .findFirst()
+    public Game findByIdOrThrowBadResquestException(long id) {
+        return gameRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game not found"));
+
     }
 
-    public Game save(Game game) {
-        game.setId(ThreadLocalRandom.current().nextLong(3, 10000));
-        games.add(game);
-        return game;
+    public Game save(GamePostRequestBody gamePostRequestBody) {
+        return gameRepository.save(Game.builder().name(gamePostRequestBody.getName()).build());
     }
 
     public void delete(long id) {
-        games.remove(findById(id));
+        gameRepository.delete(findByIdOrThrowBadResquestException(id));
     }
 
-    public void replace(Game game) {
-        delete(game.getId());
-        games.add(game);
+    public void replace(GamePutRequestBody gamePutRequestBody) {
+        findByIdOrThrowBadResquestException(gamePutRequestBody.getId());
+        Game game =Game.builder()
+                .id(gamePutRequestBody.getId())
+                .name(gamePutRequestBody.getName())
+                .build();
+
+        gameRepository.save(game);
     }
 }

@@ -1,6 +1,8 @@
 package com.gabriel.api.controller;
 
 import com.gabriel.api.domain.Game;
+import com.gabriel.api.requests.GamePostRequestBody;
+import com.gabriel.api.requests.GamePutRequestBody;
 import com.gabriel.api.service.GameService;
 import com.gabriel.api.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +31,12 @@ public class GamesController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<Game> findById(@PathVariable long id){
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok(gameService.findById(id));
+        return ResponseEntity.ok(gameService.findByIdOrThrowBadResquestException(id));
     }
 
     @PostMapping
-    public ResponseEntity<Game> save(@RequestBody Game game){
-        return new ResponseEntity<>(gameService.save(game), HttpStatus.CREATED);
+    public ResponseEntity<Game> save(@RequestBody GamePostRequestBody gamePostRequestBody){
+        return new ResponseEntity<>(gameService.save(gamePostRequestBody), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -45,8 +47,8 @@ public class GamesController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Game game){
-        gameService.replace(game);
+    public ResponseEntity<Void> replace(@RequestBody GamePutRequestBody gamePutRequestBody){
+        gameService.replace(gamePutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
