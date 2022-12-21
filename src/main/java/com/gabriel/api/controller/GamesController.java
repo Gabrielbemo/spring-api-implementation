@@ -30,8 +30,12 @@ public class GamesController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Game> findById(@PathVariable long id){
-        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(gameService.findByIdOrThrowBadResquestException(id));
+    }
+
+    @GetMapping(path = "/find")
+    public ResponseEntity<List<Game>> findByName(@RequestParam String name){
+        return ResponseEntity.ok(gameService.findByName(name));
     }
 
     @PostMapping

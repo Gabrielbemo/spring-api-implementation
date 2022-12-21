@@ -10,3 +10,4 @@ spring:
   jpa:
     hibernate:
       ddl_auto: update
+    show-sql: true

@@ -1,6 +1,7 @@
 package com.gabriel.api.service;
 
 import com.gabriel.api.domain.Game;
+import com.gabriel.api.mapper.GameMapper;
 import com.gabriel.api.repository.GameRepository;
 import com.gabriel.api.requests.GamePostRequestBody;
 import com.gabriel.api.requests.GamePutRequestBody;
@@ -21,6 +22,10 @@ public class GameService {
         return gameRepository.findAll();
     }
 
+    public List<Game> findByName(String name) {
+        return gameRepository.findByName(name);
+    }
+
     public Game findByIdOrThrowBadResquestException(long id) {
         return gameRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game not found"));
@@ -28,7 +33,7 @@ public class GameService {
     }
 
     public Game save(GamePostRequestBody gamePostRequestBody) {
-        return gameRepository.save(Game.builder().name(gamePostRequestBody.getName()).build());
+        return gameRepository.save(GameMapper.INSTANCE.toGame(gamePostRequestBody));
     }
 
     public void delete(long id) {
@@ -37,11 +42,8 @@ public class GameService {
 
     public void replace(GamePutRequestBody gamePutRequestBody) {
         findByIdOrThrowBadResquestException(gamePutRequestBody.getId());
-        Game game =Game.builder()
-                .id(gamePutRequestBody.getId())
-                .name(gamePutRequestBody.getName())
-                .build();
-
+        Game game = GameMapper.INSTANCE.toGame(gamePutRequestBody);
+        game.setId(gamePutRequestBody.getId());
         gameRepository.save(game);
     }
 }
