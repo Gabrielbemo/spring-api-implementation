@@ -1,6 +1,7 @@
 package com.gabriel.api.service;
 
 import com.gabriel.api.domain.Game;
+import com.gabriel.api.exception.BadRequestException;
 import com.gabriel.api.mapper.GameMapper;
 import com.gabriel.api.repository.GameRepository;
 import com.gabriel.api.requests.GamePostRequestBody;
@@ -28,7 +29,7 @@ public class GameService {
 
     public Game findByIdOrThrowBadResquestException(long id) {
         return gameRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game not found"));
+                .orElseThrow(() -> new BadRequestException("Game not found"));
 
     }
 
