@@ -7,9 +7,8 @@ import com.gabriel.api.repository.GameRepository;
 import com.gabriel.api.requests.GamePostRequestBody;
 import com.gabriel.api.requests.GamePutRequestBody;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,22 +26,25 @@ public class GameService {
         return gameRepository.findByName(name);
     }
 
-    public Game findByIdOrThrowBadResquestException(long id) {
+    public Game findByIdOrThrowBadRequestException(long id) {
         return gameRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Game not found"));
+                             .orElseThrow(() -> new BadRequestException("Game not found"));
 
     }
 
+    @Transactional
     public Game save(GamePostRequestBody gamePostRequestBody) {
         return gameRepository.save(GameMapper.INSTANCE.toGame(gamePostRequestBody));
     }
 
+    @Transactional
     public void delete(long id) {
-        gameRepository.delete(findByIdOrThrowBadResquestException(id));
+        gameRepository.delete(findByIdOrThrowBadRequestException(id));
     }
 
+    @Transactional
     public void replace(GamePutRequestBody gamePutRequestBody) {
-        findByIdOrThrowBadResquestException(gamePutRequestBody.getId());
+        findByIdOrThrowBadRequestException(gamePutRequestBody.getId());
         Game game = GameMapper.INSTANCE.toGame(gamePutRequestBody);
         game.setId(gamePutRequestBody.getId());
         gameRepository.save(game);
