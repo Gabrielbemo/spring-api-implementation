@@ -8,6 +8,8 @@ import com.gabriel.api.util.DateUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +26,9 @@ public class GamesController {
     private final GameService gameService;
 
     @GetMapping
-    public ResponseEntity<List<Game>> list() {
+    public ResponseEntity<Page<Game>> list(Pageable pageable) {
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return new ResponseEntity<>(gameService.listAll(), HttpStatus.OK);
+        return new ResponseEntity<>(gameService.listAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")

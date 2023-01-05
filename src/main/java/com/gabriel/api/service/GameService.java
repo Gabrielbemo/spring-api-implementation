@@ -7,6 +7,8 @@ import com.gabriel.api.repository.GameRepository;
 import com.gabriel.api.requests.GamePostRequestBody;
 import com.gabriel.api.requests.GamePutRequestBody;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +20,8 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    public List<Game> listAll() {
-        return gameRepository.findAll();
+    public Page<Game> listAll(Pageable pageable) {
+        return gameRepository.findAll(pageable);
     }
 
     public List<Game> findByName(String name) {
