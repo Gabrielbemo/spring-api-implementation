@@ -4,7 +4,6 @@ import com.gabriel.api.domain.Game;
 import com.gabriel.api.requests.GamePostRequestBody;
 import com.gabriel.api.requests.GamePutRequestBody;
 import com.gabriel.api.service.GameService;
-import com.gabriel.api.util.DateUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,21 +13,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @Log4j2
 @RequestMapping("/api/game/v1")
 @RequiredArgsConstructor
-public class GamesController {
-    private final DateUtil dateUtil;
+public class GameController {
     private final GameService gameService;
 
     @GetMapping
     public ResponseEntity<Page<Game>> list(Pageable pageable) {
-        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return new ResponseEntity<>(gameService.listAll(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/all")
+    public ResponseEntity<List<Game>> listAll() {
+        return new ResponseEntity<>(gameService.listAllNonPageable(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
@@ -54,7 +55,6 @@ public class GamesController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         gameService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

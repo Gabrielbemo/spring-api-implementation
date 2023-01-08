@@ -24,6 +24,10 @@ public class GameService {
         return gameRepository.findAll(pageable);
     }
 
+    public List<Game> listAllNonPageable() {
+        return gameRepository.findAll();
+    }
+
     public List<Game> findByName(String name) {
         return gameRepository.findByName(name);
     }
