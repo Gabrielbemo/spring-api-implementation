@@ -6,7 +6,7 @@ public class GamePostRequestBodyCreator {
 
     public static GamePostRequestBody createGamePostRequestBody() {
         return GamePostRequestBody.builder()
-                                  .name(GameCreator.CreateValidGame().getName())
+                                  .name(GameCreator.createValidGame().getName())
                                   .build();
     }
 }

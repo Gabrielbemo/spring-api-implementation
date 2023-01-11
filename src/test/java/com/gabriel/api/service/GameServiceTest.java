@@ -34,7 +34,7 @@ class GameServiceTest {
 
     @BeforeEach
     void setUp() {
-        Game validGame = GameCreator.CreateValidGame();
+        Game validGame = GameCreator.createValidGame();
 
         BDDMockito.when(gameRepositoryMock.findAll(ArgumentMatchers.any(PageRequest.class)))
                   .thenReturn(new PageImpl<>(List.of(validGame)));
@@ -49,7 +49,7 @@ class GameServiceTest {
                   .thenReturn(List.of(validGame));
 
         BDDMockito.when(gameRepositoryMock.save(ArgumentMatchers.any(Game.class)))
-                  .thenReturn(GameCreator.CreateValidGame());
+                  .thenReturn(GameCreator.createValidGame());
 
         BDDMockito.doNothing().when(gameRepositoryMock).delete(ArgumentMatchers.any(Game.class));
     }
@@ -58,7 +58,7 @@ class GameServiceTest {
     @Test
     void list_ReturnsListOfGamesInsidePageObject_WhenSuccessful() {
 
-        Page<Game> foundGames = gameService.listAll(null);
+        Page<Game> foundGames = gameService.listAll(PageRequest.of(1, 1));
 
         assertNotNull(foundGames);
 
@@ -68,12 +68,12 @@ class GameServiceTest {
 
         assertEquals(
                 foundGames.toList().get(0).getName(),
-                GameCreator.CreateValidGame().getName());
+                GameCreator.createValidGame().getName());
     }
 
     @DisplayName("Return a list of games when successful")
     @Test
-    void listAll_ReturnsListOfGames_WhenSuccessful() {
+    void listAllNonPageable_ReturnsListOfGames_WhenSuccessful() {
 
         List<Game> foundGames = gameService.listAllNonPageable();
 
@@ -83,13 +83,13 @@ class GameServiceTest {
 
         assertEquals(
                 foundGames.get(0).getName(),
-                GameCreator.CreateValidGame().getName());
+                GameCreator.createValidGame().getName());
     }
 
     @DisplayName("Return a game by id when successful")
     @Test
     void findById_ReturnsGame_WhenSuccessful() {
-        Game gameToBeFind = GameCreator.CreateValidGame();
+        Game gameToBeFind = GameCreator.createValidGame();
         Game foundGame = gameService.findByIdOrThrowBadRequestException(gameToBeFind.getId());
 
         assertNotNull(foundGame);
@@ -107,7 +107,7 @@ class GameServiceTest {
     @Test
     void findByName_ReturnsListOfGames_WhenSuccessful() {
 
-        List<Game> foundGames = gameService.findByName(GameCreator.CreateValidGame().getName());
+        List<Game> foundGames = gameService.findByName(GameCreator.createValidGame().getName());
 
         assertNotNull(foundGames);
 
@@ -115,7 +115,7 @@ class GameServiceTest {
 
         assertEquals(
                 foundGames.get(0).getName(),
-                GameCreator.CreateValidGame().getName());
+                GameCreator.createValidGame().getName());
     }
 
     @DisplayName("Save a game and return saved game when successful")
@@ -125,9 +125,9 @@ class GameServiceTest {
 
         assertNotNull(savedGame);
 
-        assertEquals(savedGame.getId(), GameCreator.CreateValidGame().getId());
+        assertEquals(savedGame.getId(), GameCreator.createValidGame().getId());
 
-        assertEquals(savedGame.getName(), GameCreator.CreateValidGame().getName());
+        assertEquals(savedGame.getName(), GameCreator.createValidGame().getName());
     }
 
     @DisplayName("Replace a game when successful")
@@ -141,6 +141,6 @@ class GameServiceTest {
     @Test
     void delete_ReturnsVoidResponseEntity_WhenSuccessful() {
 
-        assertDoesNotThrow(() -> gameService.delete(GameCreator.CreateValidGame().getId()));
+        assertDoesNotThrow(() -> gameService.delete(GameCreator.createValidGame().getId()));
     }
 }

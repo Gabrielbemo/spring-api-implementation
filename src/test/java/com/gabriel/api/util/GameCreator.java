@@ -4,13 +4,13 @@ import com.gabriel.api.domain.Game;
 
 public class GameCreator {
 
-    public static Game CreateGameToBeSaved() {
+    public static Game createGameToBeSaved() {
         return Game.builder()
                    .name("tf2")
                    .build();
     }
 
-    public static Game CreateValidGame() {
+    public static Game createValidGame() {
         return Game.builder()
                    .id(1L)
                    .name("tf2")

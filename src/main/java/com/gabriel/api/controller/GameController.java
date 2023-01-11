@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @Log4j2
-@RequestMapping("/api/game/v1")
+@RequestMapping("/api/v1/games")
 @RequiredArgsConstructor
 public class GameController {
     private final GameService gameService;

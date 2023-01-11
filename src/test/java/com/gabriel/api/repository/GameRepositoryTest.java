@@ -31,7 +31,7 @@ class GameRepositoryTest {
     @DisplayName("Find by name and return a list of games if successful")
     @Test
     void findByName_ReturnsListOfGame_WhenSuccessful() {
-        Game savedGame = gameRepository.save(GameCreator.CreateGameToBeSaved());
+        Game savedGame = gameRepository.save(GameCreator.createGameToBeSaved());
 
         List<Game> games = gameRepository.findByName(savedGame.getName());
 

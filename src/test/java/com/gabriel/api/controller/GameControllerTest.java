@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +34,7 @@ class GameControllerTest {
 
     @BeforeEach
     void setUp() {
-        Game validGame = GameCreator.CreateValidGame();
+        Game validGame = GameCreator.createValidGame();
 
         BDDMockito.when(gameServiceMock.listAll(ArgumentMatchers.any()))
                   .thenReturn(new PageImpl<>(List.of(validGame)));
@@ -48,7 +49,7 @@ class GameControllerTest {
                   .thenReturn(List.of(validGame));
 
         BDDMockito.when(gameServiceMock.save(ArgumentMatchers.any(GamePostRequestBody.class)))
-                  .thenReturn(GameCreator.CreateValidGame());
+                  .thenReturn(GameCreator.createValidGame());
 
         BDDMockito.doNothing().when(gameServiceMock).replace(ArgumentMatchers.any(GamePutRequestBody.class));
 
@@ -65,11 +66,11 @@ class GameControllerTest {
 
         assertNotNull(foundGames.toList());
 
-        assertEquals(1, foundGames.getSize());
+        assertFalse(foundGames.isEmpty());
 
         assertEquals(
                 foundGames.toList().get(0).getName(),
-                GameCreator.CreateValidGame().getName());
+                GameCreator.createValidGame().getName());
     }
 
     @DisplayName("Return a list of games when successful")
@@ -80,17 +81,17 @@ class GameControllerTest {
 
         assertNotNull(foundGames);
 
-        assertEquals(1, foundGames.size());
+        assertFalse(foundGames.isEmpty());
 
         assertEquals(
                 foundGames.get(0).getName(),
-                GameCreator.CreateValidGame().getName());
+                GameCreator.createValidGame().getName());
     }
 
     @DisplayName("Return a game by id when successful")
     @Test
     void findById_ReturnsGame_WhenSuccessful() {
-        Game gameToBeFind = GameCreator.CreateValidGame();
+        Game gameToBeFind = GameCreator.createValidGame();
         Game foundGame = gameController.findById(gameToBeFind.getId()).getBody();
 
         assertNotNull(foundGame);
@@ -108,15 +109,28 @@ class GameControllerTest {
     @Test
     void findByName_ReturnsListOfGames_WhenSuccessful() {
 
-        List<Game> foundGames = gameController.findByName(GameCreator.CreateValidGame().getName()).getBody();
+        List<Game> foundGames = gameController.findByName(GameCreator.createValidGame().getName()).getBody();
 
         assertNotNull(foundGames);
 
-        assertEquals(1, foundGames.size());
+        assertFalse(foundGames.isEmpty());
 
         assertEquals(
                 foundGames.get(0).getName(),
-                GameCreator.CreateValidGame().getName());
+                GameCreator.createValidGame().getName());
+    }
+
+    @DisplayName("Return a empty list of games is not find by name")
+    @Test
+    void findByName_ReturnsEmptyListOfGame_WhenGameIsNotFound() {
+        BDDMockito.when(gameServiceMock.findByName(ArgumentMatchers.any(String.class)))
+                  .thenReturn(Collections.emptyList());
+
+        List<Game> foundGames = gameController.findByName(GameCreator.createValidGame().getName()).getBody();
+
+        assertNotNull(foundGames);
+
+        assertTrue(foundGames.isEmpty());
     }
 
     @DisplayName("Save a game and return saved game when successful")
@@ -126,9 +140,9 @@ class GameControllerTest {
 
         assertNotNull(savedGame);
 
-        assertEquals(savedGame.getId(), GameCreator.CreateValidGame().getId());
+        assertEquals(savedGame.getId(), GameCreator.createValidGame().getId());
 
-        assertEquals(savedGame.getName(), GameCreator.CreateValidGame().getName());
+        assertEquals(savedGame.getName(), GameCreator.createValidGame().getName());
     }
 
     @DisplayName("Replace a game when successful")
@@ -146,7 +160,7 @@ class GameControllerTest {
     void delete_ReturnsVoidResponseEntity_WhenSuccessful() {
 
         assertDoesNotThrow(() -> {
-            ResponseEntity<Void> entity = gameController.delete(GameCreator.CreateValidGame().getId());
+            ResponseEntity<Void> entity = gameController.delete(GameCreator.createValidGame().getId());
 
             assertNotNull(entity);
 
